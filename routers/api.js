@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const lobbysockets = require("../modules/lobbysockets.js");
-const gamesockets = require("../modules/gamesockets.js");
 
 const api = (req, res) => {
   res.json({ success: true });

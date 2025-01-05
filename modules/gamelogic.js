@@ -29,6 +29,7 @@ gamelogic.awaitRepsonse = async function (game, nsp) {
 
 gamelogic.nextTurn = async function (game, nsp) {
   if (game.state == "BETTING") {
+    nsp.emit("gameStateChanged", "waiting");
     game.state = "DEALING CARDS";
     await gamelogic.dealCards(game, nsp);
     gamelogic.nextTurn(game, nsp);

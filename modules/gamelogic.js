@@ -284,11 +284,13 @@ gamelogic.addBet = async function (player, amount, socket, game, nsp) {
   player.bets[0][0].push(amount);
   gamelogic.mergeStack(player.bets[0][0]);
   nsp.emit("playersUpdated", game.players);
+  socket.emit("gameStateChanged", "betting");
 };
 
 gamelogic.rebet = function (player, socket, game, nsp) {
   player.bets = [[[]]];
   nsp.emit("playersUpdated", game.players);
+  socket.emit("gameStateChanged", "betting");
 };
 
 gamelogic.placeBet = function (player, socket, game, nsp) {

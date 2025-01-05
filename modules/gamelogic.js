@@ -280,18 +280,18 @@ gamelogic.compareDealerCount = async function (count, game, nsp) {
   nsp.emit("playersUpdated", game.players);
 };
 
-gamelogic.addBet = async function (player, amount, game, nsp) {
+gamelogic.addBet = async function (player, amount, socket, game, nsp) {
   player.bets[0][0].push(amount);
   gamelogic.mergeStack(player.bets[0][0]);
   nsp.emit("playersUpdated", game.players);
 };
 
-gamelogic.rebet = function (player, game, nsp) {
+gamelogic.rebet = function (player, socket, game, nsp) {
   player.bets = [[[]]];
   nsp.emit("playersUpdated", game.players);
 };
 
-gamelogic.placeBet = function (player, game, nsp) {
+gamelogic.placeBet = function (player, socket, game, nsp) {
   if (!player.ready && player.bets[0][0].length > 0) {
     player.ready = true;
 

@@ -110,15 +110,15 @@ gamesockets.new = function(id) {
     });
 
     socket.on("addBet", (amount) => {
-      gamelogic.addBet(player, amount, game, nsp);
+      gamelogic.addBet(player, amount, socket, game, nsp);
     });
 
     socket.on("rebet", () => {
-      gamelogic.rebet(player, game, nsp);
+      gamelogic.rebet(player, socket, game, nsp);
     });
 
     socket.on("placeBet", () => {
-      gamelogic.placeBet(player, game, nsp);
+      gamelogic.placeBet(player, socket, game, nsp);
     });
 
     socket.on("double", () => {

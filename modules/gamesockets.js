@@ -118,7 +118,7 @@ gamesockets.new = function(id) {
     });
 
     socket.on("placeBet", () => {
-      gamelogic.placeBet(player, socket, game, nsp);
+      gamelogic.placeBet(player, game, nsp);
     });
 
     socket.on("double", () => {

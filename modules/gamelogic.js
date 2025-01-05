@@ -293,7 +293,7 @@ gamelogic.rebet = function (player, socket, game, nsp) {
   socket.emit("gameStateChanged", "betting");
 };
 
-gamelogic.placeBet = function (player, socket, game, nsp) {
+gamelogic.placeBet = function (player, game, nsp) {
   if (!player.ready && player.bets[0][0].length > 0) {
     player.ready = true;
 

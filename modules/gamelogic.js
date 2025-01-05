@@ -29,7 +29,6 @@ gamelogic.awaitRepsonse = async function (game, nsp) {
 
 gamelogic.nextTurn = async function (game, nsp) {
   if (game.state == "BETTING") {
-    nsp.emit("gameStateChanged", "waiting");
     game.state = "DEALING CARDS";
     await gamelogic.dealCards(game, nsp);
     gamelogic.nextTurn(game, nsp);
@@ -90,6 +89,8 @@ gamelogic.nextPlayer = async function (game, nsp) {
 };
 
 gamelogic.dealCards = async function (game, nsp) {
+  nsp.emit("gameStateChanged", "waiting");
+  
   for (let i = 0; i < 2; i++) {
     for (const player of game.players) {
       //PLAY ANIM

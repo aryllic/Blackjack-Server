@@ -94,10 +94,10 @@ gamelogic.dealCards = async function (game, nsp) {
   for (let i = 0; i < 2; i++) {
     for (const player of game.players) {
       //PLAY ANIM
-      nsp.emit("playAnimation", {
+      /*nsp.emit("playAnimation", {
         animation: "pullCard",
         player: player.id,
-      });
+      });*/
 
       await gamelogic.sleep(500);
       player.decks[0].push(cards.pullCard(game.deck));
@@ -126,6 +126,12 @@ gamelogic.dealCards = async function (game, nsp) {
 
       console.log("PLAYER BLACKJACK ANIM");
       //PLAY ANIM
+      nsp.emit("playAnimation", {
+        animation: "blackjack",
+        player: player.id,
+        deckIndex: 0,
+        animationDuration: 1000,
+      });
       await gamelogic.sleep(1000);
     };
   };
@@ -136,6 +142,11 @@ gamelogic.dealCards = async function (game, nsp) {
 
     console.log("DEALER BLACKJACK ANIM");
     //PLAY ANIM
+    nsp.emit("playAnimation", {
+      animation: "blackjack",
+      player: "dealer",
+      animationDuration: 1000,
+    });
     await gamelogic.sleep(1000);
 
     game.players.forEach(async (player) => {
@@ -237,6 +248,11 @@ gamelogic.updateDealer = async function (game, nsp) {
   } else {
     console.log("DEALER BUSTED ANIM");
     //PLAY ANIM
+    nsp.emit("playAnimation", {
+      animation: "bust",
+      player: "dealer",
+      animationDuration: 1000,
+    });
     await gamelogic.sleep(1000);
 
     game.players.forEach((player) => {
@@ -246,9 +262,18 @@ gamelogic.updateDealer = async function (game, nsp) {
           sockets
             .find((socket) => socket.id == player.socketId)
             .emit("deckWon", player.bets[index]);
+
+          nsp.emit("playAnimation", {
+            animation: "win",
+            player: player.id,
+            deckIndex: index,
+            animationDuration: 1000,
+          });
         };
       });
     });
+
+    await gamelogic.sleep(1000);
 
     return true;
   };
@@ -264,14 +289,35 @@ gamelogic.compareDealerCount = async function (count, game, nsp) {
             .find((socket) => socket.id == player.socketId)
             .emit("deckWon", player.bets[index]);
           player.bets[index] = [[]];
+
+          nsp.emit("playAnimation", {
+            animation: "win",
+            player: player.id,
+            deckIndex: index,
+            animationDuration: 1000,
+          });
         } else if (gamelogic.checkHighestCount(deck) == count) {
           const sockets = await nsp.fetchSockets();
           sockets
             .find((socket) => socket.id == player.socketId)
             .emit("returnDeck", player.bets[index]);
           player.bets[index] = [[]];
+
+          nsp.emit("playAnimation", {
+            animation: "push",
+            player: player.id,
+            deckIndex: index,
+            animationDuration: 1000,
+          });
         } else {
           player.bets[index] = [[]];
+
+          nsp.emit("playAnimation", {
+            animation: "lose",
+            player: player.id,
+            deckIndex: index,
+            animationDuration: 1000,
+          });
         };
       };
     });
@@ -330,6 +376,12 @@ gamelogic.double = async function (player, socket, game, nsp) {
       nsp.emit("playersUpdated", game.players);
       console.log("BLACKJACK ANIM");
       //PLAY ANIM
+      nsp.emit("playAnimation", {
+        animation: "blackjack",
+        player: player.id,
+        deckIndex: index,
+        animationDuration: 1000,
+      });
       await gamelogic.sleep(1000);
 
       const sockets = await nsp.fetchSockets();
@@ -357,6 +409,12 @@ gamelogic.double = async function (player, socket, game, nsp) {
     nsp.emit("playersUpdated", game.players);
     console.log("BUSTED ANIM");
     //PLAY ANIM
+    nsp.emit("playAnimation", {
+      animation: "bust",
+      player: player.id,
+      deckIndex: index,
+      animationDuration: 1000,
+    });
     await gamelogic.sleep(1000);
 
     player.bets[player.currentDeck] = [[]];
@@ -408,6 +466,12 @@ gamelogic.hit = async function (player, socket, game, nsp) {
       nsp.emit("playersUpdated", game.players);
       console.log("BLACKJACK ANIM");
       //PLAY ANIM
+      nsp.emit("playAnimation", {
+        animation: "blackjack",
+        player: player.id,
+        deckIndex: index,
+        animationDuration: 1000,
+      });
       await gamelogic.sleep(1000);
 
       const sockets = await nsp.fetchSockets();
@@ -429,6 +493,12 @@ gamelogic.hit = async function (player, socket, game, nsp) {
     nsp.emit("playersUpdated", game.players);
     console.log("BUSTED ANIM");
     //PLAY ANIM
+    nsp.emit("playAnimation", {
+      animation: "bust",
+      player: player.id,
+      deckIndex: index,
+      animationDuration: 1000,
+    });
     await gamelogic.sleep(1000);
 
     player.bets[player.currentDeck] = [[]];

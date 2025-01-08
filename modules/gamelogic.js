@@ -98,7 +98,6 @@ gamelogic.dealCards = async function (game, nsp) {
         animation: "pullCard",
         player: player.id,
       });*/
-
       await gamelogic.sleep(500);
       player.decks[0].push(cards.pullCard(game.deck));
       nsp.emit("playersUpdated", game.players);

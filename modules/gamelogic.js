@@ -94,10 +94,6 @@ gamelogic.dealCards = async function (game, nsp) {
   for (let i = 0; i < 2; i++) {
     for (const player of game.players) {
       //PLAY ANIM
-      /*nsp.emit("playAnimation", {
-        animation: "pullCard",
-        player: player.id,
-      });*/
       await gamelogic.sleep(500);
       player.decks[0].push(cards.pullCard(game.deck));
       nsp.emit("playersUpdated", game.players);
@@ -123,8 +119,6 @@ gamelogic.dealCards = async function (game, nsp) {
     if (cards.checkBlackjack(player.decks[0])) {
       player.blackjack[0] = true;
 
-      console.log("PLAYER BLACKJACK ANIM");
-      //PLAY ANIM
       nsp.emit("playAnimation", {
         animation: "blackjack",
         player: player.id,
@@ -138,9 +132,7 @@ gamelogic.dealCards = async function (game, nsp) {
   if (cards.checkBlackjack(game.dealerCards)) {
     game.dealerCards[1].hidden = false;
     nsp.emit("dealerCardsUpdated", game.dealerCards);
-
-    console.log("DEALER BLACKJACK ANIM");
-    //PLAY ANIM
+    
     nsp.emit("playAnimation", {
       animation: "blackjack",
       player: "dealer",
@@ -231,7 +223,6 @@ gamelogic.updateDealer = async function (game, nsp) {
 
   if (count) {
     if (count >= 17) {
-      console.log("DEALER DONE");
       await gamelogic.compareDealerCount(count, game, nsp);
       return true;
     } else {
@@ -245,8 +236,6 @@ gamelogic.updateDealer = async function (game, nsp) {
       };
     };
   } else {
-    console.log("DEALER BUSTED ANIM");
-    //PLAY ANIM
     nsp.emit("playAnimation", {
       animation: "bust",
       player: "dealer",
@@ -322,7 +311,6 @@ gamelogic.compareDealerCount = async function (count, game, nsp) {
     });
   });
 
-  //PLAY ANIM (WIN OR LOSE)
   await gamelogic.sleep(1000);
   nsp.emit("playersUpdated", game.players);
 };
@@ -373,12 +361,11 @@ gamelogic.double = async function (player, socket, game, nsp) {
     if (cards.checkBlackjack(player.decks[player.currentDeck])) {
       player.blackjack[player.currentDeck] = true;
       nsp.emit("playersUpdated", game.players);
-      console.log("BLACKJACK ANIM");
-      //PLAY ANIM
+
       nsp.emit("playAnimation", {
         animation: "blackjack",
         player: player.id,
-        deckIndex: index,
+        deckIndex: player.currentDeck,
         animationDuration: 1000,
       });
       await gamelogic.sleep(1000);
@@ -406,12 +393,11 @@ gamelogic.double = async function (player, socket, game, nsp) {
     };
   } else {
     nsp.emit("playersUpdated", game.players);
-    console.log("BUSTED ANIM");
-    //PLAY ANIM
+
     nsp.emit("playAnimation", {
       animation: "bust",
       player: player.id,
-      deckIndex: index,
+      deckIndex: player.currentDeck,
       animationDuration: 1000,
     });
     await gamelogic.sleep(1000);
@@ -463,12 +449,11 @@ gamelogic.hit = async function (player, socket, game, nsp) {
     if (cards.checkBlackjack(player.decks[player.currentDeck])) {
       player.blackjack[player.currentDeck] = true;
       nsp.emit("playersUpdated", game.players);
-      console.log("BLACKJACK ANIM");
-      //PLAY ANIM
+
       nsp.emit("playAnimation", {
         animation: "blackjack",
         player: player.id,
-        deckIndex: index,
+        deckIndex: player.currentDeck,
         animationDuration: 1000,
       });
       await gamelogic.sleep(1000);
@@ -490,12 +475,11 @@ gamelogic.hit = async function (player, socket, game, nsp) {
     };
   } else {
     nsp.emit("playersUpdated", game.players);
-    console.log("BUSTED ANIM");
-    //PLAY ANIM
+
     nsp.emit("playAnimation", {
       animation: "bust",
       player: player.id,
-      deckIndex: index,
+      deckIndex: player.currentDeck,
       animationDuration: 1000,
     });
     await gamelogic.sleep(1000);
